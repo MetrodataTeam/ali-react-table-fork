@@ -1,11 +1,10 @@
 import styled from 'styled-components'
 
-const prefix = 'dmc-'
 
 // artTableWrapper modifiers: use-outer-border
 // artTable modifiers: lock empty sticky has-header
 
-export const Classes = {
+export const Classes = (prefix = 'dmc-virtual-') => ({
   /** BaseTable 表格组件的外层包裹 div */
   artTableWrapper: `${prefix}table-wrapper`,
 
@@ -48,7 +47,7 @@ export const Classes = {
   loadingIndicator: `${prefix}loading-indicator`,
   loadingIndicatorIcon: `${prefix}loading-indicator-icon`,
   loadingContentWrapper: `${prefix}loading-content-wrapper`,
-}
+})
 
 export const Z = {
   lock: 20,
@@ -150,26 +149,26 @@ const ArtTableWrapper = styled.div`
   &.use-outer-border {
     border: 1px solid var(--border-color);
 
-    .${Classes.tableCell}.first, .${Classes.tableHeaderCell}.first {
+    .${Classes().tableCell}.first, .${Classes().tableHeaderCell}.first {
       border-left: none;
     }
-    .${Classes.tableCell}.last, .${Classes.tableHeaderCell}.last {
+    .${Classes().tableCell}.last, .${Classes().tableHeaderCell}.last {
       border-right: none;
     }
-    .${Classes.tableHeaderRow}.first .${Classes.tableHeaderCell}, .${Classes.tableRow}.first .${Classes.tableCell} {
+    .${Classes().tableHeaderRow}.first .${Classes().tableHeaderCell}, .${Classes().tableRow}.first .${Classes().tableCell} {
       border-top: none;
     }
-    .${Classes.tableRow}.last .${Classes.tableCell} {
+    .${Classes().tableRow}.last .${Classes().tableCell} {
       border-bottom: none;
     }
   }
 
   // 表格 header 总是从 body 中同步滚动 scrollLeft
-  .${Classes.tableHeader} {
+  .${Classes().tableHeader} {
     overflow: hidden;
   }
 
-  .${Classes.virtualBlank} {
+  .${Classes().virtualBlank} {
     background: var(--bgcolor);
     // 这里是为了遮盖 z-index=1 的 lock-shadow
     z-index: ${Z.virtual};
@@ -178,10 +177,10 @@ const ArtTableWrapper = styled.div`
 
 const MainSection = styled.div`
   // 表格的基本样式
-  .${Classes.tableBody} {
+  .${Classes().tableBody} {
     overflow: auto;
   }
-  .${Classes.tableHeader} {
+  .${Classes().tableHeader} {
     overflow: hidden;
   }
 `
@@ -203,24 +202,24 @@ const ArtTable = styled.div`
   position: relative;
 
   &.has-header {
-    .${Classes.tableRow}.first td {
+    .${Classes().tableRow}.first td {
       border-top: none;
     }
   }
 
   &.sticky {
-    .${Classes.tableHeaderWrapper} {
+    .${Classes().tableHeaderWrapper} {
       position: sticky;
       top: 0;
       z-index: ${Z.header};
     }
   }
 
-  .${Classes.tableHeaderWrapper} {
+  .${Classes().tableHeaderWrapper} {
     background: var(--header-bgcolor);
   }
 
-  .${Classes.tableRow} {
+  .${Classes().tableRow} {
     &.hovered {
       background: var(--row-hover-color);
     }
@@ -232,7 +231,7 @@ const ArtTable = styled.div`
     background: var(--bgcolor);
   }
 
-  .${Classes.tableCell} {
+  .${Classes().tableCell} {
     height: var(--row-height);
   }
   td,
@@ -281,7 +280,7 @@ const LockSectionBase = styled.div`
     overflow: hidden;
   }
 
-  .${Classes.tableBody} {
+  .${Classes().tableBody} {
     overflow: hidden;
   }
 `
@@ -291,7 +290,7 @@ const LeftSection = styled(LockSectionBase)`
   left: 0;
   top: 0;
 
-  &.${Classes.lockShadow} {
+  &.${Classes().lockShadow} {
     &::before {
       content: '';
       position: absolute;
@@ -302,7 +301,7 @@ const LeftSection = styled(LockSectionBase)`
       right: 0;
       box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
     }
-    > .${Classes.tableInner} {
+    > .${Classes().tableInner} {
       position: relative;
       // 这里是为了遮盖 z-index=1 的 lock-shadow
       z-index: ${Z.tableInner};
@@ -315,7 +314,7 @@ const RightSection = styled(LockSectionBase)`
   right: 0;
   top: 0;
 
-  &.${Classes.lockShadow} {
+  &.${Classes().lockShadow} {
     &::before {
       content: '';
       position: absolute;
@@ -326,7 +325,7 @@ const RightSection = styled(LockSectionBase)`
       left: 0;
       box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
     }
-    > .${Classes.tableInner} {
+    > .${Classes().tableInner} {
       position: relative;
       z-index: ${Z.tableInner};
     }
@@ -342,12 +341,12 @@ const EmptyWrapper = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
 
-  .${Classes.emptyImage} {
+  .${Classes().emptyImage} {
     width: 50px;
     height: 50px;
   }
 
-  .${Classes.emptyTips} {
+  .${Classes().emptyTips} {
     margin-top: 16px;
     line-height: 1.5;
   }
@@ -360,7 +359,7 @@ const StickyScroll = styled.div`
   z-index: ${Z.scrollItem};
   margin-top: -17px;
 
-  .${Classes.stickyScrollItem} {
+  .${Classes().stickyScrollItem} {
     // 必须有高度才能出现滚动条
     height: 1px;
     visibility: hidden;

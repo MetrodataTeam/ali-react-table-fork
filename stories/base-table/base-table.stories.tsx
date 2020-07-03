@@ -38,13 +38,15 @@ export function 基本用法() {
     { code: 'deadCount', name: '死亡', width: 100, render: amount, align: 'right' },
     { code: 'updateTime', name: '最后更新时间', width: 180, render: time },
   ]
-  return <BaseTable isLoading={isLoading} dataSource={dataSource.slice(0, 5)} columns={columns} />
+  return (
+    <BaseTable isLoading={isLoading} dataSource={dataSource.slice(0, 5)} columns={columns} prefixCls="dmc-table-ssss" />
+  )
 }
 
 const ZebraBaseTable = styled(BaseTable)`
   --row-hover-color: none;
 
-  .${Classes.tableRow} {
+  .${Classes().tableRow} {
     &.even {
       background: #f2f2f2;
     }
@@ -81,7 +83,7 @@ export function 自定义表格样式2() {
   const ZebraBaseTable = styled(BaseTable)`
      --row-hover-color: none;
 
-    .${Classes.tableRow} {
+    .${Classes().tableRow} {
       &.even {
         background: #f2f2f2;
       }

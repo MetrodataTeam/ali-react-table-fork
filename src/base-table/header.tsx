@@ -20,6 +20,7 @@ export interface TableHeaderProps {
   useVirtual: BaseTableState['useVirtual']
   side: TableSide
   hoz: HorizontalRenderRange
+  prefixCls?: string
 }
 
 type ColWithRenderInfo =
@@ -181,7 +182,7 @@ function calculateRenderInfo(
 }
 
 export default function TableHeader(props: TableHeaderProps) {
-  const { nested, flat } = props
+  const { nested, flat, prefixCls } = props
   const colCount = flat.main.length
   const rowCount = getTreeDepth(nested.main) + 1
   const renderInfo = calculateRenderInfo(props, rowCount)
@@ -196,7 +197,7 @@ export default function TableHeader(props: TableHeaderProps) {
             key={wrapped.colIndex}
             {...headerCellProps}
             className={cx(
-              Classes.tableHeaderCell,
+              Classes(prefixCls).tableHeaderCell,
               {
                 first: wrapped.colIndex === 0,
                 last: wrapped.colIndex + wrapped.colSpan === colCount,
@@ -222,7 +223,7 @@ export default function TableHeader(props: TableHeaderProps) {
     return (
       <tr
         key={level}
-        className={cx(Classes.tableHeaderRow, {
+        className={cx(Classes(prefixCls).tableHeaderRow, {
           first: level === 0,
           last: level === rowCount - 1,
         })}
@@ -233,7 +234,7 @@ export default function TableHeader(props: TableHeaderProps) {
   })
 
   return (
-    <div className={Classes.tableHeader}>
+    <div className={Classes(prefixCls).tableHeader}>
       <table>
         <colgroup>
           {renderInfo.flat.map((wrapped) => {

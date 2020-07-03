@@ -40,12 +40,12 @@ const StyledBaseTable = styled(BaseTable)`
   --border-color: none;
   --header-bgcolor: none;
 
-  .${Classes.tableHeader} {
+  .${Classes().tableHeader} {
     border-top: 1px solid #dfe3e8;
     border-bottom: 1px solid #dfe3e8;
   }
 
-  .${Classes.tableHeaderCell} {
+  .${Classes().tableHeaderCell} {
     height: 48px;
   }
 `

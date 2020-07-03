@@ -8,7 +8,7 @@ import { ratio } from '../assets/format'
 export default { title: '示例 / 树状表格中的最近展开标记' }
 
 const StyledBaseTable = styled(BaseTable)`
-  .${Classes.tableRow}.last-open {
+  .${Classes().tableRow}.last-open {
     background: rgba(128, 243, 87, 0.32);
 
     .expansion-icon {
@@ -16,7 +16,7 @@ const StyledBaseTable = styled(BaseTable)`
     }
   }
 
-  .${Classes.tableRow}.last-collapse {
+  .${Classes().tableRow}.last-collapse {
     background: rgba(253, 32, 32, 0.32);
 
     .expansion-icon {

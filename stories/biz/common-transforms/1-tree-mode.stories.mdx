@@ -83,7 +83,7 @@ function MyComponent() {
 
 在 onChangeOpenKeys 记录上一次用户展开的节点的 key，并使用 getRowProps 为相应的行设置 `className="last-open"`（也设置为其他类名）。这样就可以通过 CSS 来方便的控制「上次展开的位置」的样式。
 
-表格行的 CSS 类名为 `dmc-table-row`（推荐使用 `Classes.tableRow` 来引用），展开/收拢图标为 `expansion-icon`
+表格行的 CSS 类名为 `dmc-table-row`（推荐使用 `Classes().tableRow` 来引用），展开/收拢图标为 `expansion-icon`
 
 <Preview>
   <Story id="示例-树状表格中的最近展开标记--tree-table-with-last-open-mark" />

@@ -2,9 +2,9 @@ import React, { ReactNode } from 'react'
 import { Classes } from './styles'
 import { LOADING_ICON_SIZE } from './utils'
 
-const LoadingIndicatorIcon = ({ size }: { size: number }) => (
+const LoadingIndicatorIcon = ({ size, prefixCls }: { size: number; prefixCls?: string }) => (
   <svg
-    className={Classes.loadingIndicatorIcon}
+    className={Classes(prefixCls).loadingIndicatorIcon}
     style={{
       margin: 'auto',
       display: 'block',
@@ -41,16 +41,24 @@ Loading.defaultProps = {
   visible: true,
 }
 
-export default function Loading({ visible, children }: { visible: boolean; children: ReactNode }) {
+export default function Loading({
+  visible,
+  children,
+  prefixCls,
+}: {
+  visible: boolean
+  children: ReactNode
+  prefixCls?: string
+}) {
   return (
-    <div className={Classes.loadingWrapper} style={{ position: 'relative' }}>
+    <div className={Classes(prefixCls).loadingWrapper} style={{ position: 'relative' }}>
       {visible && (
         <div
-          className={Classes.loadingIndicatorWrapper}
+          className={Classes(prefixCls).loadingIndicatorWrapper}
           style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
         >
           <div
-            className={Classes.loadingIndicator}
+            className={Classes(prefixCls).loadingIndicator}
             style={{
               position: 'sticky',
               zIndex: 1,
@@ -59,11 +67,11 @@ export default function Loading({ visible, children }: { visible: boolean; child
               right: 0,
             }}
           >
-            <LoadingIndicatorIcon size={LOADING_ICON_SIZE} />
+            <LoadingIndicatorIcon size={LOADING_ICON_SIZE} prefixCls={prefixCls} />
           </div>
         </div>
       )}
-      <div className={Classes.loadingContentWrapper} style={{ filter: visible ? 'blur(1px)' : 'none' }}>
+      <div className={Classes().loadingContentWrapper} style={{ filter: visible ? 'blur(1px)' : 'none' }}>
         {children}
       </div>
     </div>

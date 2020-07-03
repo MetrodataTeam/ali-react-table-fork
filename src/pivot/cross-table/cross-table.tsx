@@ -8,11 +8,11 @@ import { CrossTableLeftMetaColumn, LeftCrossTreeNode, TopCrossTreeNode } from '.
 
 export const StyledBaseTableForCrossTable: ComponentType<BaseTableProps> = styled(BaseTable)`
   // 使 dmc-table 默认的 hover 效果失效
-  .${Classes.tableBody} tr.hovered {
+  .${Classes().tableBody} tr.hovered {
     background-color: inherit;
   }
 
-  .${Classes.tableBody} td.${CrossTableClasses.leftHeaderCell} {
+  .${Classes().tableBody} td.${CrossTableClasses.leftHeaderCell} {
     vertical-align: center;
     padding-top: 16px;
   }
@@ -24,10 +24,10 @@ export const StyledBaseTableForCrossTable: ComponentType<BaseTableProps> = style
   }
 
   &.compact {
-    .${Classes.tableCell} {
+    .${Classes().tableCell} {
       height: 36px;
     }
-    .${Classes.tableBody} td.${CrossTableClasses.leftHeaderCell} {
+    .${Classes().tableBody} td.${CrossTableClasses.leftHeaderCell} {
       padding-top: 8px;
     }
   }

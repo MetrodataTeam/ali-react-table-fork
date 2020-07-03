@@ -75,6 +75,7 @@ export interface BaseTableProps {
   flowRoot?: 'auto' | 'self' | (() => HTMLElement | typeof window) | HTMLElement | typeof window
 
   getRowProps?(record: any, rowIndex: number): React.HTMLAttributes<HTMLTableRowElement>
+  prefixCls?: string
 }
 
 export interface BaseTableState {
@@ -195,7 +196,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
     const onScroll = side === 'main' ? this.syncScrollFromMainBody : null
 
     return (
-      <div className={cx(Classes.tableInner)}>
+      <div className={cx(Classes(this.props.prefixCls).tableInner)}>
         {hasHeader && this.renderTableHeader(side, renderRange)}
         {this.renderTableBody(side, renderRange, onWheel, onScroll)}
       </div>
@@ -208,11 +209,18 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
 
     return (
       <div
-        className={cx(Classes.tableHeaderWrapper)}
+        className={cx(Classes(this.props.prefixCls).tableHeaderWrapper)}
         style={{ top: stickyTop }}
         onWheel={this.onWheelInOverflowHiddenPart}
       >
-        <TableHeader nested={nested} flat={flat} hoz={hoz} side={side} useVirtual={useVirtual} />
+        <TableHeader
+          nested={nested}
+          flat={flat}
+          hoz={hoz}
+          side={side}
+          useVirtual={useVirtual}
+          prefixCls={this.props.prefixCls}
+        />
       </div>
     )
   }
@@ -265,21 +273,21 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       if (this.state.needRenderLock) {
         if (x <= 0) {
           // 滚动条在最左端
-          leftSection?.classList.remove(Classes.lockShadow)
-          rightSection?.classList.add(Classes.lockShadow)
+          leftSection?.classList.remove(Classes(this.props.prefixCls).lockShadow)
+          rightSection?.classList.add(Classes(this.props.prefixCls).lockShadow)
         } else if (x >= scrollNode.scrollWidth - scrollNode.clientWidth) {
           // 滚动条在最右端
-          leftSection?.classList.add(Classes.lockShadow)
-          rightSection?.classList.remove(Classes.lockShadow)
+          leftSection?.classList.add(Classes(this.props.prefixCls).lockShadow)
+          rightSection?.classList.remove(Classes(this.props.prefixCls).lockShadow)
         } else {
           // 滚动条在中间
-          leftSection?.classList.add(Classes.lockShadow)
-          rightSection?.classList.add(Classes.lockShadow)
+          leftSection?.classList.add(Classes(this.props.prefixCls).lockShadow)
+          rightSection?.classList.add(Classes(this.props.prefixCls).lockShadow)
         }
       } else {
         // 不需要渲染 left-section / right-section
-        leftSection?.classList.remove(Classes.lockShadow)
-        rightSection?.classList.remove(Classes.lockShadow)
+        leftSection?.classList.remove(Classes(this.props.prefixCls).lockShadow)
+        rightSection?.classList.remove(Classes(this.props.prefixCls).lockShadow)
       }
     }
   }
@@ -411,25 +419,28 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
 
     if (ver.bottomIndex - ver.topIndex === 0) {
       return (
-        <div className={Classes.tableBody} onWheel={onWheel} onScroll={onScroll}>
+        <div className={Classes(this.props.prefixCls).tableBody} onWheel={onWheel} onScroll={onScroll}>
           <EmptyTable
             colgroup={colgroup}
             colSpan={wrappedCols.length}
             isLoading={isLoading}
             emptyContent={emptyContent}
+            prefixCls={this.props.prefixCls}
           />
         </div>
       )
     }
 
     const spanManager = new SpanManager()
-    const rows = dataSource.slice(ver.topIndex, ver.bottomIndex).map(renderRow)
+    const rows = dataSource
+      .slice(ver.topIndex, ver.bottomIndex)
+      .map((record, i) => renderRow(record, i, this.props.prefixCls))
 
     return (
-      <div className={Classes.tableBody} onWheel={onWheel} onScroll={onScroll}>
+      <div className={Classes(this.props.prefixCls).tableBody} onWheel={onWheel} onScroll={onScroll}>
         <div
           key="top-blank"
-          className={cx(Classes.virtualBlank, 'top')}
+          className={cx(Classes(this.props.prefixCls).virtualBlank, 'top')}
           style={{
             height: ver.topBlank,
           }}
@@ -440,7 +451,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
         </table>
         <div
           key="bottom-blank"
-          className={cx(Classes.virtualBlank, 'bottom')}
+          className={cx(Classes(this.props.prefixCls).virtualBlank, 'bottom')}
           style={{
             height: ver.bottomBlank,
           }}
@@ -448,13 +459,12 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       </div>
     )
 
-    function renderRow(record: any, i: number) {
+    function renderRow(record: any, i: number, prefixCls?: string) {
       const rowIndex = ver.topIndex + i
       spanManager.stripUpwards(rowIndex)
-
       const rowProps = getRowProps(record, rowIndex)
       const rowClass = cx(
-        Classes.tableRow,
+        Classes(prefixCls).tableRow,
         {
           first: rowIndex === 0,
           last: rowIndex === dataSource.length - 1,
@@ -482,13 +492,13 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
             if (wrapped.type === 'blank') {
               return <td key={wrapped.blankSide} />
             }
-            return renderCell(record, rowIndex, wrapped.col, wrapped.colIndex)
+            return renderCell(record, rowIndex, wrapped.col, wrapped.colIndex, prefixCls)
           })}
         </tr>
       )
     }
 
-    function renderCell(record: any, rowIndex: number, column: ArtColumn, colIndex: number) {
+    function renderCell(record: any, rowIndex: number, column: ArtColumn, colIndex: number, prefixCls?: string) {
       if (spanManager.testSkip(rowIndex, colIndex)) {
         return null
       }
@@ -520,7 +530,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
         spanManager.add(rowIndex, colIndex, colSpan, rowSpan)
       }
 
-      const cls = cx(Classes.tableCell, {
+      const cls = cx(Classes(prefixCls).tableCell, {
         first: colIndex === 0,
         last: colIndex === colCount - 1,
       })
@@ -574,7 +584,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
     const { dataSource, className, style, hasHeader, useOuterBorder, isLoading, isStickyHead } = this.props
 
     const styleWrapper = (node: ReactNode) => {
-      const wrapperClassName = cx(Classes.artTableWrapper, className, {
+      const wrapperClassName = cx(Classes(this.props.prefixCls).artTableWrapper, className, {
         'use-outer-border': useOuterBorder,
       })
       const artTableWrapperProps = {
@@ -589,22 +599,26 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       <>
         {node}
         <Styled.StickyScroll
-          className={Classes.stickyScroll}
+          className={Classes(this.props.prefixCls).stickyScroll}
           style={{
             display: this.state.hasScroll ? 'block' : 'none',
             bottom: this.props.stickyBottom,
           }}
         >
-          <div className={Classes.stickyScrollItem} />
+          <div className={Classes(this.props.prefixCls).stickyScrollItem} />
         </Styled.StickyScroll>
       </>
     )
 
     const loadingWrapper = (node: ReactNode) => {
-      return <Loading visible={isLoading}>{node}</Loading>
+      return (
+        <Loading visible={isLoading} prefixCls={this.props.prefixCls}>
+          {node}
+        </Loading>
+      )
     }
 
-    const tableClass = cx(Classes.artTable, {
+    const tableClass = cx(Classes(this.props.prefixCls).artTable, {
       sticky: isStickyHead,
       empty: dataSource.length === 0,
       lock: this.isLock(),
@@ -636,7 +650,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       return null
     }
     return (
-      <Styled.LeftSection className={Classes.leftSection}>
+      <Styled.LeftSection className={Classes(this.props.prefixCls).leftSection}>
         {this.renderTableSection('left', renderRange)}
       </Styled.LeftSection>
     )
@@ -644,7 +658,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
 
   private renderMainSection(renderRange: FullRenderRange) {
     return (
-      <Styled.MainSection className={cx(Classes.mainSection)}>
+      <Styled.MainSection className={cx(Classes(this.props.prefixCls).mainSection)}>
         {this.renderTableSection('main', renderRange)}
       </Styled.MainSection>
     )
@@ -657,7 +671,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       return null
     }
     return (
-      <Styled.RightSection className={Classes.rightSection}>
+      <Styled.RightSection className={Classes(this.props.prefixCls).rightSection}>
         {this.renderTableSection('right', renderRange)}
       </Styled.RightSection>
     )
@@ -748,24 +762,24 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
   private updateDoms() {
     const artTableWrapper = this.artTableWrapperRef.current
     const artTable = this.artTableRef.current
-    const mainSection = query(artTable, Classes.mainSection)
-    const leftSection = query(artTable, Classes.leftSection)
-    const rightSection = query(artTable, Classes.rightSection)
+    const mainSection = query(artTable, Classes(this.props.prefixCls).mainSection)
+    const leftSection = query(artTable, Classes(this.props.prefixCls).leftSection)
+    const rightSection = query(artTable, Classes(this.props.prefixCls).rightSection)
 
     this.doms = {
       artTableWrapper,
       artTable,
       mainSection,
-      mainHeader: query(mainSection, Classes.tableHeader),
-      mainBody: query(mainSection, Classes.tableBody),
+      mainHeader: query(mainSection, Classes(this.props.prefixCls).tableHeader),
+      mainBody: query(mainSection, Classes(this.props.prefixCls).tableBody),
       leftSection,
-      leftHeader: query(leftSection, Classes.tableHeader),
-      leftBody: query(leftSection, Classes.tableBody),
+      leftHeader: query(leftSection, Classes(this.props.prefixCls).tableHeader),
+      leftBody: query(leftSection, Classes(this.props.prefixCls).tableBody),
       rightSection,
-      rightHeader: query(rightSection, Classes.tableHeader),
-      rightBody: query(rightSection, Classes.tableBody),
-      stickyScroll: query(artTableWrapper, Classes.stickyScroll),
-      stickyScrollItem: query(artTableWrapper, Classes.stickyScrollItem),
+      rightHeader: query(rightSection, Classes(this.props.prefixCls).tableHeader),
+      rightBody: query(rightSection, Classes(this.props.prefixCls).tableBody),
+      stickyScroll: query(artTableWrapper, Classes(this.props.prefixCls).stickyScroll),
+      stickyScrollItem: query(artTableWrapper, Classes(this.props.prefixCls).stickyScrollItem),
     }
   }
 
@@ -776,10 +790,12 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       }
     }
 
-    const virtualTop = this.doms.mainBody.querySelector<HTMLDivElement>(`.${Classes.virtualBlank}.top`)
+    const virtualTop = this.doms.mainBody.querySelector<HTMLDivElement>(
+      `.${Classes(this.props.prefixCls).virtualBlank}.top`,
+    )
     const virtualTopHeight = virtualTop?.clientHeight ?? 0
 
-    queryAll<HTMLTableRowElement>(this.doms.mainBody, Classes.tableRow).forEach((tr) => {
+    queryAll<HTMLTableRowElement>(this.doms.mainBody, Classes(this.props.prefixCls).tableRow).forEach((tr) => {
       const rowIndex = Number(tr.dataset.rowindex)
       this.store.updateItem(rowIndex, tr.offsetTop + virtualTopHeight, tr.offsetHeight)
     })
@@ -787,7 +803,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
 
   private adjustLoadingPosition() {
     const { mainSection, artTableWrapper } = this.doms
-    const loadingIndicator = query(artTableWrapper, Classes.loadingIndicator)
+    const loadingIndicator = query(artTableWrapper, Classes(this.props.prefixCls).loadingIndicator)
     if (!loadingIndicator) {
       return
     }
@@ -811,13 +827,13 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       return
     }
 
-    const mainTableRows = queryAll<HTMLTableRowElement>(this.doms.mainBody, Classes.tableRow)
+    const mainTableRows = queryAll<HTMLTableRowElement>(this.doms.mainBody, Classes(this.props.prefixCls).tableRow)
     if (this.doms.leftBody) {
-      const leftTableRows = queryAll<HTMLTableRowElement>(this.doms.leftBody, Classes.tableRow)
+      const leftTableRows = queryAll<HTMLTableRowElement>(this.doms.leftBody, Classes(this.props.prefixCls).tableRow)
       batchAdjustLeftCellSizes(leftTableRows, mainTableRows as TRNodeList)
     }
     if (this.doms.rightBody) {
-      const rightTableRows = queryAll<HTMLTableRowElement>(this.doms.rightBody, Classes.tableRow)
+      const rightTableRows = queryAll<HTMLTableRowElement>(this.doms.rightBody, Classes(this.props.prefixCls).tableRow)
       batchAdjustRightCellSizes(rightTableRows, mainTableRows)
     }
   }
@@ -842,13 +858,22 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       return
     }
 
-    const mainTableRows = queryAll<HTMLTableRowElement>(this.doms.mainHeader, Classes.tableHeaderRow)
+    const mainTableRows = queryAll<HTMLTableRowElement>(
+      this.doms.mainHeader,
+      Classes(this.props.prefixCls).tableHeaderRow,
+    )
     if (this.doms.leftHeader) {
-      const leftTableRows = queryAll<HTMLTableRowElement>(this.doms.leftHeader, Classes.tableHeaderRow)
+      const leftTableRows = queryAll<HTMLTableRowElement>(
+        this.doms.leftHeader,
+        Classes(this.props.prefixCls).tableHeaderRow,
+      )
       batchAdjustLeftCellSizes(leftTableRows, mainTableRows)
     }
     if (this.doms.rightHeader) {
-      const rightTableRows = queryAll<HTMLTableRowElement>(this.doms.rightHeader, Classes.tableHeaderRow)
+      const rightTableRows = queryAll<HTMLTableRowElement>(
+        this.doms.rightHeader,
+        Classes(this.props.prefixCls).tableHeaderRow,
+      )
       batchAdjustRightCellSizes(rightTableRows, mainTableRows)
     }
   }
@@ -862,7 +887,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
     const { mainBody, artTable } = this.doms
 
     if (this.isLock() && dataSource.length > 0) {
-      const firstRow = query<HTMLTableRowElement>(mainBody, Classes.tableRow)
+      const firstRow = query<HTMLTableRowElement>(mainBody, Classes(this.props.prefixCls).tableRow)
       if (firstRow == null) {
         // fixme 理论上 firstRow 不为 null，但实际情况下非常低概率还是会出现为 null 的情况
         return
