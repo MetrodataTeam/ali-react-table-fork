@@ -76,6 +76,8 @@ export interface BaseTableProps {
 
   getRowProps?(record: any, rowIndex: number): React.HTMLAttributes<HTMLTableRowElement>
   prefixCls?: string
+  scrollTo?: {x?: number, y?:number}
+  renderHeader?:(props: any) => React.ReactElement
 }
 
 export interface BaseTableState {
@@ -115,6 +117,8 @@ export interface BaseTableState {
   offsetX: number
   /** 横向虚拟滚动 最大渲染尺寸 */
   maxRenderWidth: number
+  /** 是否第一次渲染 用来scroll */
+  flag: boolean
 }
 
 export default class BaseTable extends React.Component<BaseTableProps, BaseTableState> {
@@ -127,6 +131,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
     isLoading: false,
     getRowProps: noop,
     flowRoot: 'auto',
+    scrollTo:{x: 0, y: 0},
   }
 
   static getDerivedStateFromProps = getDerivedStateFromProps
@@ -149,6 +154,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       maxRenderHeight: Number(window.innerHeight),
       offsetX: 0,
       maxRenderWidth: window.innerWidth,
+      flag: true,
     }
   }
 
@@ -207,20 +213,30 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
     const { stickyTop } = this.props
     const { flat, nested, useVirtual } = this.state
 
+    const headerProps = {
+      nested,
+      flat,
+      hoz,
+      side,
+      prefixCls: this.props.prefixCls,
+      useVirtual
+    }
     return (
       <div
         className={cx(Classes(this.props.prefixCls).tableHeaderWrapper)}
         style={{ top: stickyTop }}
         onWheel={this.onWheelInOverflowHiddenPart}
       >
-        <TableHeader
-          nested={nested}
-          flat={flat}
-          hoz={hoz}
-          side={side}
-          useVirtual={useVirtual}
-          prefixCls={this.props.prefixCls}
-        />
+        {this.props.renderHeader ? this.props.renderHeader(headerProps) :  
+            <TableHeader
+            nested={nested}
+            flat={flat}
+            hoz={hoz}
+            side={side}
+            useVirtual={useVirtual}
+            prefixCls={this.props.prefixCls}
+          />}
+       
       </div>
     )
   }
@@ -236,7 +252,16 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
 
   private syncScrollFromMainBody = () => {
     const { scrollLeft: x, scrollTop: y } = this.doms.mainBody
-    this.syncScroll(x, y)
+    const calcX = x || this.props.scrollTo?.x;
+    this.syncScroll(calcX, y);
+  }
+
+  private scrollFromWrapper = () => {
+    const scrollNode = this.doms.artTableWrapper
+    if(this.props.dataSource.length > 0 && this.state.flag) {
+      scrollNode.scrollTop = this.props.scrollTo?.y
+      this.setState({flag: false});
+    }
   }
 
   private updateOffsetX(nextOffsetX: number) {
@@ -752,6 +777,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
   componentDidUpdate(prevProps: Readonly<BaseTableProps>) {
     this.updateDoms()
     this.didMountOrUpdate(prevProps)
+    this.scrollFromWrapper();
   }
 
   componentWillUnmount() {

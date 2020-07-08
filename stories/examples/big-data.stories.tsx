@@ -56,6 +56,7 @@ export function 滚动容器为指定高度的div() {
       useOuterBorder
       isLoading={isLoading}
       dataSource={dataSource}
+      scrollTo={{y: 200000}}
       columns={[
         {
           lock: true,
