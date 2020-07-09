@@ -7,7 +7,7 @@ import { ArtColumn } from '../interfaces'
 import EmptyTable from './empty'
 import getDerivedStateFromProps from './getDerivedStateFromProps'
 import TableHeader from './header'
-import ItemSizeStore from './helpers/ItemSizeStore'
+import ItemSizeStore, { ITEM_SIZE } from './helpers/ItemSizeStore'
 import SpanManager from './helpers/SpanManager'
 import VisibleClipRectObservable, { getClipRect } from './helpers/VisibleClipRectObservable'
 import {
@@ -76,7 +76,7 @@ export interface BaseTableProps {
 
   getRowProps?(record: any, rowIndex: number): React.HTMLAttributes<HTMLTableRowElement>
   prefixCls?: string
-  scrollTo?: {x?: number, y?:number}
+  scrollToIndex?: number
   renderHeader?:(props: any) => React.ReactElement
 }
 
@@ -131,7 +131,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
     isLoading: false,
     getRowProps: noop,
     flowRoot: 'auto',
-    scrollTo:{x: 0, y: 0},
+    scrollToIndex: -1,
   }
 
   static getDerivedStateFromProps = getDerivedStateFromProps
@@ -252,14 +252,15 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
 
   private syncScrollFromMainBody = () => {
     const { scrollLeft: x, scrollTop: y } = this.doms.mainBody
-    const calcX = x || this.props.scrollTo?.x;
-    this.syncScroll(calcX, y);
+    this.syncScroll(x, y);
   }
 
   private scrollFromWrapper = () => {
     const scrollNode = this.doms.artTableWrapper
-    if(this.props.dataSource.length > 0 && this.state.flag) {
-      scrollNode.scrollTop = this.props.scrollTo?.y
+    if(this.props.dataSource.length > 0 && this.state.flag) {      
+      const scrollHeight = this.props.scrollToIndex * ITEM_SIZE;
+      const maxHeight = (this.props.dataSource.length -1) * ITEM_SIZE;
+      scrollNode.scrollTop = scrollHeight > 0 ? scrollHeight<maxHeight ? scrollHeight : maxHeight : 0;
       this.setState({flag: false});
     }
   }
