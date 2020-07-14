@@ -111,14 +111,14 @@ export type BaseTableCSSVariables = Partial<{
 }>
 
 const ArtTableWrapper = styled.div`
-  --color: #333;
-  --bgcolor: white;
-  --header-color: #5a6c84;
-  --header-bgcolor: #e9edf2;
-  --border-color: #dfe3e8;
+  --color: transparent;
+  --bgcolor: transparent;
+  --header-color: transparent;
+  --header-bgcolor: transparent;
+  --border-color: transparent;
 
   --row-height: 48px;
-  --row-hover-color: #f5f5f5;
+  --row-hover-color: transparent;
   --header-row-height: 32px;
 
   --cell-border: 1px solid var(--border-color);
@@ -308,6 +308,7 @@ const LeftSection = styled(LockSectionBase)`
     }
   }
 `
+
 
 const RightSection = styled(LockSectionBase)`
   position: absolute;
