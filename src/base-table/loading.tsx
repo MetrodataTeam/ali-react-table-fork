@@ -45,10 +45,14 @@ export default function Loading({
   visible,
   children,
   prefixCls,
+  loadingIcon,
+  headerHeight
 }: {
   visible: boolean
   children: ReactNode
   prefixCls?: string
+  loadingIcon?: React.ReactElement
+  headerHeight?: number
 }) {
   return (
     <div className={Classes(prefixCls).loadingWrapper} style={{ position: 'relative' }}>
@@ -60,18 +64,23 @@ export default function Loading({
           <div
             className={Classes(prefixCls).loadingIndicator}
             style={{
-              position: 'sticky',
+              position: 'absolute',
               zIndex: 1,
-              top: LOADING_ICON_SIZE,
+              top: 0,
               left: 0,
               right: 0,
+              bottom: 0,
+              marginTop: headerHeight || LOADING_ICON_SIZE ,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            <LoadingIndicatorIcon size={LOADING_ICON_SIZE} prefixCls={prefixCls} />
+           {loadingIcon || <LoadingIndicatorIcon size={LOADING_ICON_SIZE} prefixCls={prefixCls} />} 
           </div>
         </div>
       )}
-      <div className={Classes().loadingContentWrapper} style={{ filter: visible ? 'blur(1px)' : 'none' }}>
+      <div className={Classes(prefixCls).loadingContentWrapper}>
         {children}
       </div>
     </div>

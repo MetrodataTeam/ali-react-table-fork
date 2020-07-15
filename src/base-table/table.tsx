@@ -78,6 +78,8 @@ export interface BaseTableProps {
   prefixCls?: string
   scrollToIndex?: number
   renderHeader?:(props: any) => React.ReactElement
+  loadingIcon?: React.ReactElement
+  headerHeight?: number
 }
 
 export interface BaseTableState {
@@ -636,9 +638,9 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       </>
     )
 
-    const loadingWrapper = (node: ReactNode) => {
+    const loadingWrapper = (node: ReactNode) => {    
       return (
-        <Loading visible={isLoading} prefixCls={this.props.prefixCls}>
+        <Loading visible={isLoading} prefixCls={this.props.prefixCls} loadingIcon={this.props.loadingIcon} headerHeight={this.props.headerHeight}>
           {node}
         </Loading>
       )
@@ -836,8 +838,8 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
     }
     const { clipRect } = getClipRect(mainSection, this.resolveFlowRoot())
     const height = clipRect.bottom - clipRect.top
-    loadingIndicator.style.top = `${height / 2 - LOADING_ICON_SIZE / 2}px`
-    loadingIndicator.style.marginTop = `${height / 2 - LOADING_ICON_SIZE / 2}px`
+    // loadingIndicator.style.top = `${height / 2 - LOADING_ICON_SIZE / 2}px`
+    // loadingIndicator.style.marginTop = `${height / 2 - LOADING_ICON_SIZE / 2}px`
   }
 
   private adjustSize = () => {
