@@ -561,6 +561,7 @@ export default class BaseTable extends React.Component<BaseTableProps, BaseTable
       const cls = cx(Classes(prefixCls).tableCell, {
         first: colIndex === 0,
         last: colIndex === colCount - 1,
+        ellipsis: column.ellipsis,
       })
 
       if (column.align) {

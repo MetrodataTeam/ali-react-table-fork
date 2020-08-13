@@ -111,6 +111,14 @@ export type BaseTableCSSVariables = Partial<{
 }>
 
 const ArtTableWrapper = styled.div`
+  // --color: #333;
+  // --bgcolor: white;
+  // --header-color: #5a6c84;
+  // --header-bgcolor: #e9edf2;
+  // --border-color: #dfe3e8;
+
+  // --row-height: 48px;
+  // --row-hover-color: #f5f5f5;
   --color: transparent;
   --bgcolor: transparent;
   --header-color: transparent;
@@ -205,6 +213,11 @@ const ArtTable = styled.div`
     .${Classes().tableRow}.first td {
       border-top: none;
     }
+  }
+  .${Classes().tableCell}.ellipsis, .${Classes().tableHeaderCell}.ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   &.sticky {

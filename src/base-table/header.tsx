@@ -201,6 +201,7 @@ export default function TableHeader(props: TableHeaderProps) {
               {
                 first: wrapped.colIndex === 0,
                 last: wrapped.colIndex + wrapped.colSpan === colCount,
+                ellipsis: wrapped.col.ellipsis
               },
               headerCellProps.className,
             )}

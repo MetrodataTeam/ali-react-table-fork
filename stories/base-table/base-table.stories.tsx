@@ -31,15 +31,15 @@ export default {
 export function 基本用法() {
   const { isLoading, dataSource } = useProvinceDataSource()
   const columns: ArtColumn[] = [
-    { code: 'provinceName', name: '省份', width: 150 },
-    { code: 'confirmedCount', name: '确诊', width: 100, render: amount, align: 'right' },
-    { code: 'suspectedCount', name: '疑似', width: 100, render: amount, align: 'right' },
+    { code: 'provinceName', name: '省份', width: 150, ellipsis: true },
+    { code: 'confirmedCount', name: '确诊', width: 100, render: amount, align: 'right', ellipsis: true  },
+    { code: 'suspectedCount', name: '疑似', width: 100, render: amount, align: 'right', ellipsis: true  },
     { code: 'curedCount', name: '治愈', width: 100, render: amount, align: 'right' },
     { code: 'deadCount', name: '死亡', width: 100, render: amount, align: 'right' },
     { code: 'updateTime', name: '最后更新时间', width: 180, render: time },
   ]
   return (
-    <BaseTable isLoading={isLoading} dataSource={dataSource.slice(0, 5)} columns={columns} prefixCls="dmc-table-ssss" />
+    <BaseTable isLoading={isLoading} dataSource={dataSource.slice(0, 5)} columns={columns} />
   )
 }
 

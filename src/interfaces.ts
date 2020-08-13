@@ -29,6 +29,9 @@ export interface ArtColumnStaticPart {
 
   /** 功能开关 */
   features?: { [key: string]: any }
+
+  /** 是否省略 */
+  ellipsis?: boolean
 }
 
 export interface ArtColumnDynamicPart {
