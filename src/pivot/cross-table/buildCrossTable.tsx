@@ -38,8 +38,8 @@ export default function buildCrossTable(
   options: BuildCrossTableOptions,
 ): Pick<BaseTableProps, 'columns' | 'dataSource'> {
   const { leftTree, topTree, leftTotalNode, topTotalNode, leftMetaColumns } = options
-
-  const leftHeaderWidth = Math.max(leftMetaColumns.length, getTreeDepth(leftTree) + 1)
+  const leftHeaderWidth = getTreeDepth(leftTree) + 1;
+  const originLeftHeaderWidth =  Math.max(leftMetaColumns.length, getTreeDepth(leftTree) + 1);
 
   return {
     columns: getColumns(),
@@ -219,7 +219,7 @@ export default function buildCrossTable(
         }
 
         if (isLeafNode(node)) {
-          rect.right = leftHeaderWidth
+          rect.right =  originLeftHeaderWidth
           rect.bottom = rect.top + 1
           flatRows.push(row)
           count += 1
