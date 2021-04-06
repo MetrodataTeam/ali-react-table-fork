@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 // artTableWrapper modifiers: use-outer-border
 // artTable modifiers: lock empty sticky has-header
 
@@ -111,22 +110,23 @@ export type BaseTableCSSVariables = Partial<{
 }>
 
 const ArtTableWrapper = styled.div`
-  // --color: #333;
-  // --bgcolor: white;
-  // --header-color: #5a6c84;
-  // --header-bgcolor: #e9edf2;
-  // --border-color: #dfe3e8;
-
-  // --row-height: 48px;
-  // --row-hover-color: #f5f5f5;
-  --color: transparent;
-  --bgcolor: transparent;
-  --header-color: transparent;
-  --header-bgcolor: transparent;
-  --border-color: transparent;
+  --color: #333;
+  --bgcolor: white;
+  --header-color: #5a6c84;
+  --header-bgcolor: #e9edf2;
+  --border-color: #dfe3e8;
 
   --row-height: 48px;
-  --row-hover-color: transparent;
+  --row-hover-color: #f5f5f5;
+  // --color: transparent;
+  // --bgcolor: transparent;
+  // --header-color: transparent;
+  // --header-bgcolor: transparent;
+  // --border-color: transparent;
+
+  // --row-height: 48px;
+  // --row-hover-color: transparent;
+  --body-border-bottom: 1px solid transparent;
   --header-row-height: 32px;
 
   --cell-border: 1px solid var(--border-color);
@@ -163,7 +163,10 @@ const ArtTableWrapper = styled.div`
     .${Classes().tableCell}.last, .${Classes().tableHeaderCell}.last {
       border-right: none;
     }
-    .${Classes().tableHeaderRow}.first .${Classes().tableHeaderCell}, .${Classes().tableRow}.first .${Classes().tableCell} {
+    .${Classes().tableHeaderRow}.first
+      .${Classes().tableHeaderCell},
+      .${Classes().tableRow}.first
+      .${Classes().tableCell} {
       border-top: none;
     }
     .${Classes().tableRow}.last .${Classes().tableCell} {
@@ -243,6 +246,11 @@ const ArtTable = styled.div`
     table-layout: fixed;
     background: var(--bgcolor);
   }
+  .dmc-virtual-table-body {
+    tbody {
+      border-bottom: var(--body-border-bottom);
+    }
+  }
 
   .${Classes().tableCell} {
     height: var(--row-height);
@@ -321,7 +329,6 @@ const LeftSection = styled(LockSectionBase)`
     }
   }
 `
-
 
 const RightSection = styled(LockSectionBase)`
   position: absolute;
