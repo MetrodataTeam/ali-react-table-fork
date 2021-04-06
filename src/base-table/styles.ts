@@ -107,6 +107,8 @@ export type BaseTableCSSVariables = Partial<{
   '--header-cell-border-left': string
   /** 表头单元格边框 */
   '--header-cell-border-right': string
+  /** 表格body下边框 */
+  '--body-border-bottom': string
 }>
 
 const ArtTableWrapper = styled.div`
